@@ -1,52 +1,52 @@
 name: "Dokku Flutter Web"
-description: "Deploy Flutter Web app to Dokku"'
+description: "Deploy Flutter Web app to Dokku"
 author: "Abdelrahman Shehata"
 branding:
   icon: "upload-cloud"
   color: "blue"
 inputs:
-    app-name:
-        description: "The name of the Dokku app"
-        required: true
-    web-dir:
-        description: "The directory containing the web files to deploy"
-        required: false
-        default: "build/web"
-    dokku-host:
-        description: "The Dokku server host"
-        required: true
-    dokku-ssh-key:
-        description: "The SSH private key for Dokku"
-        required: true
+  app-name:
+    description: "The name of the Dokku app"
+    required: true
+  web-dir:
+    description: "The directory containing the web files to deploy"
+    required: false
+    default: "build/web"
+  dokku-host:
+    description: "The Dokku server host"
+    required: true
+  dokku-ssh-key:
+    description: "The SSH private key for Dokku"
+    required: true
 runs:
-    using: "composite"
-    steps:
-      - name: Setup SSH
-        run: |
-            mkdir -p ~/.ssh
-            echo "${{ inputs.dokku-ssh-key }}" > ~/.ssh/id_rsa
-            chmod 600 ~/.ssh/id_rsa
-            ssh-keyscan -H ${{ inputs.dokku-host }} >> ~/.ssh/known_hosts
-        shell: bash
+  using: "composite"
+  steps:
+  - name: Setup SSH
+    run: |
+      mkdir -p ~/.ssh
+      echo "${{ inputs.dokku-ssh-key }}" > ~/.ssh/id_rsa
+      chmod 600 ~/.ssh/id_rsa
+      ssh-keyscan -H ${{ inputs.dokku-host }} >> ~/.ssh/known_hosts
+    shell: bash
 
-      - name: Prepare temp dir
-        run: |
-            mkdir -p deploy/build/web
-            cp -r ${{ inputs.web-dir }}/* deploy/build/web
-            echo "FROM nginx:alpine" > deploy/Dockerfile
-            echo "COPY build/web/ /usr/share/nginx/html" >> deploy/Dockerfile
-            echo "EXPOSE 80" >> deploy/Dockerfile
-            echo "CMD [\"nginx\", \"-g\", \"daemon off;\"]" >> deploy/Dockerfile
-        shell: bash
+  - name: Prepare temp dir
+    run: |
+      mkdir -p deploy/build/web
+      cp -r ${{ inputs.web-dir }}/* deploy/build/web
+      echo "FROM nginx:alpine" > deploy/Dockerfile
+      echo "COPY build/web/ /usr/share/nginx/html" >> deploy/Dockerfile
+      echo "EXPOSE 80" >> deploy/Dockerfile
+      echo "CMD [\"nginx\", \"-g\", \"daemon off;\"]" >> deploy/Dockerfile
+    shell: bash
 
-      - name: Deploy to Dokku
-        run: |
-            cd deploy
-            git init
-            git config user.name "github-actions"
-            git config user.email "actions@github.com"
-            git remote add dokku dokku@${{ inputs.dokku-host }}:${{ inputs.app-name }}
-            git add .
-            git commit -m "Deploy $GITHUB_SHA"
-            git push dokku master --force
-        shell: bash
+  - name: Deploy to Dokku
+    run: |
+      cd deploy
+      git init
+      git config user.name "github-actions"
+      git config user.email "actions@github.com"
+      git remote add dokku dokku@${{ inputs.dokku-host }}:${{ inputs.app-name }}
+      git add .
+      git commit -m "Deploy $GITHUB_SHA"
+      git push dokku master --force
+    shell: bash
