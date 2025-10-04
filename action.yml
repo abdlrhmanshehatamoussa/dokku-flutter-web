@@ -1,7 +1,9 @@
 name: "Dokku Flutter Web"
-
-description: "Deploy Flutter Web app to Dokku"
-
+description: "Deploy Flutter Web app to Dokku"'
+author: "Abdelrahman Shehata"
+branding:
+  icon: "upload-cloud"
+  color: "blue"
 inputs:
     app-name:
         description: "The name of the Dokku app"
@@ -16,7 +18,6 @@ inputs:
     dokku-ssh-key:
         description: "The SSH private key for Dokku"
         required: true
-
 runs:
     using: "composite"
     steps:
