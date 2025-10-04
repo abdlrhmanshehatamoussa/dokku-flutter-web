@@ -34,7 +34,7 @@ runs:
       mkdir -p tmp-dokku-deploy/build/web
       cp -r ${{ inputs.web-dir }}/* tmp-dokku-deploy/build/web
       cd tmp-dokku-deploy
-      curl -L https://github.com/abdlrhmanshehatamoussa/dokku-flutter-web/blob/main/docker-templates/basic/Dockerfile -o Dockerfile
+      curl -L https://raw.githubusercontent.com/abdlrhmanshehatamoussa/dokku-flutter-web/refs/heads/main/docker-templates/basic/Dockerfile -o Dockerfile
     shell: bash
 
   - name: Deploy to Dokku
