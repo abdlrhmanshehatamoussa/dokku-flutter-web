@@ -3,6 +3,7 @@ FROM nginx:alpine
 
 # Remove default nginx site config
 RUN rm /etc/nginx/conf.d/default.conf
+RUN rm -rf /usr/share/nginx/html/*
 
 # Add custom nginx configuration directly from Dockerfile
 RUN printf '%s\n' \
