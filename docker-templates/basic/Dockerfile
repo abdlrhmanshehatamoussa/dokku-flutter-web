@@ -14,8 +14,19 @@ RUN printf '%s\n' \
   '  root /usr/share/nginx/html;' \
   '  index index.html;' \
   '' \
+  '  # Allow only direct access to /index.html' \
+  '  location = /index.html {' \
+  '    try_files $uri =404;' \
+  '  }' \
+  '' \
+  '  # Prevent direct access to any file except index.html' \
+  '  location ~* ^/(?!index\.html$).+$ {' \
+  '    return 404;' \
+  '  }' \
+  '' \
+  '  # All other requests (SPA support): always serve index.html' \
   '  location / {' \
-  '    try_files $uri $uri/ /index.html;' \
+  '    try_files /index.html =404;' \
   '  }' \
   '}' > /etc/nginx/conf.d/default.conf
 
